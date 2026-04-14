@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeakTrace | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --brand-color: #6366f1; }
+        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
+        .navbar-brand { font-weight: 800; color: var(--brand-color) !important; }
+        .card { border: none; border-radius: 12px; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .purity-badge { font-size: 0.9rem; padding: 0.5rem 0.8rem; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/">SpeakTrace AI</a>
+        <div class="ms-auto">
+            <span class="text-muted me-3">Студент: Е.Д. Лиходевский</span>
+            <a href="/add" class="btn btn-primary">+ Новая сессия</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col">
+            <h2 class="fw-bold">Мои сессии</h2>
+            <p class="text-muted">Аналитика чистоты речи по вашим записям</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for session in sessions %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title fw-bold">{{ session.title }}</h5>
+                        <span class="badge {% if session.purity > 80 %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} purity-badge">
+                            {{ session.purity }}%
+                        </span>
+                    </div>
+                    <p class="text-muted small mb-3">
+                        <i class="bi bi-calendar"></i> {{ session.date }}<br>
+                        <i class="bi bi-mic"></i> Источник: {{ session.source }}
+                    </p>
+                    <a href="/report/{{ session.id }}" class="btn btn-outline-primary w-100 btn-sm">Посмотреть отчет</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

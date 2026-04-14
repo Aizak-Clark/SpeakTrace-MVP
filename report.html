@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>SpeakTrace | Отчет</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .report-card { border-radius: 15px; border: none; background: white; }
+        .purity-display { font-size: 4rem; font-weight: 800; color: #6366f1; }
+        /* Стили для тепловой карты */
+        mark.parasite { background-color: #ffcfcf; color: #b91c1c; border-bottom: 2px solid #ef4444; }
+        mark.hesitation { background-color: #fef9c3; color: #a16207; border-bottom: 2px solid #eab308; }
+        .transcript-box { line-height: 2.2; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <a href="/" class="btn btn-link text-decoration-none text-muted mb-4">← К списку сессий</a>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="report-card shadow-sm p-4">
+                <h4 class="fw-bold mb-4">Анализ текста</h4>
+                <div class="transcript-box">
+                     {{ session.transcript | safe }}
+                </div>
+                <div class="mt-4 pt-3 border-top">
+                    <span class="badge bg-warning text-dark me-2">● Паузы (Хезитации)</span>
+                    <span class="badge bg-danger text-white">● Слова-паразиты</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="report-card shadow-sm p-4 text-center mb-4">
+                <h5 class="text-muted small fw-bold text-uppercase">Purity Index</h5>
+                <div class="purity-display">{{ session.purity }}%</div>
+                <p class="text-muted">Общая чистота вашей речи</p>
+            </div>
+
+            <div class="report-card shadow-sm p-4">
+                <h5 class="fw-bold mb-3">Детали сессии</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><strong>ID:</strong> #{{ session.id }}</li>
+                    <li class="mb-2"><strong>Название:</strong> {{ session.title }}</li>
+                    <li class="mb-2"><strong>Источник:</strong> {{ session.source }}</li>
+                    <li><strong>Дата:</strong> {{ session.date }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
