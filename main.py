@@ -4,6 +4,11 @@ from typing import Optional
 from fastapi import FastAPI, Request, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from dotenv import load_dotenv
+from amo_crm import create_contact, create_lead 
+from datetime import date
+
+load_dotenv()
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -85,7 +90,7 @@ async def add_session(
     new_session = {
         "id": new_id,
         "title": title,
-        "date": "2026-04-14",
+        "date": date.today().isoformat(),
         "purity": calculated_purity,  # ТЕПЕРЬ ТУТ ДИНАМИКА
         "source": source,
         "duration": duration,
@@ -94,6 +99,17 @@ async def add_session(
     
     db_sessions.append(new_session)
     save_db(db_sessions)
+
+    contact_id = create_contact(name=title)
+    if contact_id:
+        lead_id = create_lead(title=f"Сессия: {title}", contact_id=contact_id)
+        if lead_id:
+            print(f"[amoCRM] ✅ Сделка создана: ID {lead_id}")
+        else:
+            print(f"[amoCRM] ⚠️ Сделка не создана для сессии: {title}")
+    else:
+        print(f"[amoCRM] ⚠️ Контакт не создан для сессии: {title}")
+
     return RedirectResponse(url="/", status_code=303)
 
 @app.get("/report/{session_id}", response_class=HTMLResponse)
